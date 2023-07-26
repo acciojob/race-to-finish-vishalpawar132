@@ -1,29 +1,25 @@
 window.promises = [];
-
-function createRandomDelayPromise() {
-  const min = 1000; // 1 second
-  const max = 5000; // 5 seconds
-  const delay = Math.floor(Math.random() * (max - min + 1)) + min;
-
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(delay);
-    }, delay);
-  });
-}
-
+ 
+// Create an array of five promises with random delays between 1 and 5 seconds
 for (let i = 0; i < 5; i++) {
-  promises.push(createRandomDelayPromise());
+  const delay = Math.floor(Math.random() * 5) + 1;
+  const promise = new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(`Promise ${i + 1} resolved after ${delay} seconds`);
+    }, delay * 1000);
+  });
+  promises.push(promise);
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-  Promise.any(promises)
-    .then((result) => {
-      const outputElement = document.getElementById("output");
-      outputElement.textContent = `Resolved after ${result} milliseconds.`;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-});
+ 
+// Wait for the first promise to resolve using Promise.any()
+Promise.any(promises)
+  .then((result) => {
+    // Print the result to the output div
+    const outputDiv = document.getElementById('output');
+    outputDiv.textContent = result;
+  })
+  .catch((error) => {
+    // Handle errors if no promise resolves
+    console.log('All promises rejected:', error);
+  });
 
